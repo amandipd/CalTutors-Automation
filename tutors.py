@@ -1,8 +1,8 @@
 class Tutors:
     def __init__(self, name, total_hours, total_pay):
         self.__name = name
-        self.__total_hours = 0
-        self.__total_pay = 0
+        self.__total_hours = total_hours
+        self.__total_pay = total_pay
         self.__sessions = {}
 
     # Getters
@@ -24,6 +24,15 @@ class Tutors:
         # Session Parameters
         # Key: Tutored Student's Name
         # Value: [Date, Hours, Paid]
+
+        # Ensuring inputs to paid column are valid
+        paid = paid.lower()
+        if (paid != "yes" and paid != "no" and paid != "true" and paid != "false"):
+            paid = "unknown"
         
         key = student_name 
-        self.sessions[key] = [date, hours, paid]
+
+        if key in self.__sessions.keys():
+            self.__sessions[key].append([date, hours, paid])
+        else:
+            self.__sessions[key] = [[date, hours, paid]]

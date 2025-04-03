@@ -1,18 +1,51 @@
 import re
 import requests
 import pandas as pd
+from tutors import Tutors
 import os
 
 
-def run(sheets_url):
+def run():
+    sheets_url = 'https://docs.google.com/spreadsheets/d/1jsTdN1fkj_3brJ1H6P_AShoDnsqDdG_iJi6811fL9Jc/edit?gid=0#gid=0'
     convert_url_to_sheets(sheets_url)
-    read_csv_file()
+    tutor_object = read_csv_file()
+
+    print("Tutor Name: " + tutor_object.get_name())
+
+    print("Tutor Students: " + str(tutor_object.get_sessions()))
+
+    print("Total Hours: " + str(tutor_object.get_total_hours()))
+
+    print("Total Pay: " + str(tutor_object.get_total_pay()))
 
 
 def read_csv_file():
     df = pd.read_csv("downloaded_data.csv")
-    print(df.to_string())
-    os.remove("downloaded_data.csv")
+    os.remove("downloaded_data.csv")  # Remove the file after reading it
+
+    # Get tutor name and convert to title case
+    tutor_name = df.columns.tolist()[0].title()
+    total_hours = df.at[0, 'TOTAL HOURS']
+    print(total_hours)
+    total_pay = df.at[0, 'TOTAL PAY']
+
+    # Delete name, TOTAL HOURS, and TOTAL PAY columns as they are no longer needed
+    df = df.drop(df.columns[0], axis=1)
+    df = df.drop("TOTAL HOURS", axis=1)
+    df = df.drop("TOTAL PAY", axis=1)
+
+    # print(tutor_name, total_hours, total_pay) # DEBUG
+    tutor_object = Tutors(tutor_name, total_hours, total_pay)
+
+    for __, row in df.iterrows():
+        student_name = row['STUDENT']
+        date = row['DATE']
+        hours = row['HOURS']
+        paid = row['PAID']
+
+        tutor_object.add_session(student_name, date, hours, paid)
+
+    return tutor_object
 
 
 def convert_url_to_sheets(sheets_url):
@@ -44,4 +77,4 @@ def convert_url_to_sheets(sheets_url):
         print(f"An unexpected error occurred: {e}")
 
 
-run('https://docs.google.com/spreadsheets/d/1jsTdN1fkj_3brJ1H6P_AShoDnsqDdG_iJi6811fL9Jc/edit?gid=0#gid=0')
+run()
