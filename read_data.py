@@ -1,8 +1,12 @@
 import re
 import requests
 
+def create_list_of_Hours_objects(sheets_url):
+    convert_url_to_sheets(sheets_url)
 
-def read_sheet(sheets_url):
+
+
+def convert_url_to_sheets(sheets_url):
 
     # Extract the document ID from the URL using regex
     doc_id_match = re.search(r'/d/([a-zA-Z0-9_-]+)', sheets_url)
@@ -10,6 +14,7 @@ def read_sheet(sheets_url):
         return "Invalid Google Sheets URL"
     doc_id = doc_id_match.group(1)
 
+    # Extract the gid parameter if it exists
     gid_match = re.search(r'gid=([0-9]+)', sheets_url)
     gid_param = ""
     if gid_match:
@@ -29,5 +34,3 @@ def read_sheet(sheets_url):
     except Exception as e:
         print(f"An unexpected error occurred: {e}")
 
-
-read_sheet('https://docs.google.com/spreadsheets/d/1jsTdN1fkj_3brJ1H6P_AShoDnsqDdG_iJi6811fL9Jc/edit?gid=0#gid=0')
