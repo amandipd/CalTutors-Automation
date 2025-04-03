@@ -1,9 +1,18 @@
 import re
 import requests
+import pandas as pd
+import os
 
-def create_list_of_Hours_objects(sheets_url):
+
+def run(sheets_url):
     convert_url_to_sheets(sheets_url)
+    read_csv_file()
 
+
+def read_csv_file():
+    df = pd.read_csv("downloaded_data.csv")
+    print(df.to_string())
+    os.remove("downloaded_data.csv")
 
 
 def convert_url_to_sheets(sheets_url):
@@ -34,3 +43,5 @@ def convert_url_to_sheets(sheets_url):
     except Exception as e:
         print(f"An unexpected error occurred: {e}")
 
+
+run('https://docs.google.com/spreadsheets/d/1jsTdN1fkj_3brJ1H6P_AShoDnsqDdG_iJi6811fL9Jc/edit?gid=0#gid=0')
