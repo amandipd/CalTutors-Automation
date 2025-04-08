@@ -13,7 +13,7 @@ def run():
 
     convert_url_to_sheets(sheets_url)
     # tutor_object = read_csv_file()
-    read_csv_file()
+    read_csv_file(tutor_name)
 
     # print("Tutor Name: " + tutor_object.get_name())
 
@@ -23,29 +23,22 @@ def run():
 
     # print("Total Pay: " + str(tutor_object.get_total_pay()))
 
-# Find the columns for total hours and total pay
 
-
-
-
-
-def read_csv_file():
+def read_csv_file(tutor_name):
+    # Read CSV without using index_col to preserve the first row
     df = pd.read_csv("downloaded_data.csv")
-    cols = find_total_columns(df)
     # os.remove("downloaded_data.csv")  # Remove the file after reading it
+    last_col = [df.columns[-1]] + df.iloc[:, -1].tolist()
+    total_hours = last_col[0]
+    total_pay = last_col[1]
 
-# Finds the exact row and column of a string in a pandas datagframe.
-def find_string_in_dataframe(df, search_string):
-    matches = []
+    # Debug
+    # print(last_col)
+    # print(df)
 
-    for col in df.columns:
-        exact_matches = df[df[col].astype(str) == search_string]
-        
-        if not exact_matches.empty:
-            for row_idx in exact_matches.index:
-                matches.append((row_idx, col))
-    
-    return matches if matches else None
+    curr_tutor = Tutors(tutor_name, total_hours, total_pay, df)
+    curr_tutor.print_tutor_sheet()
+
 
 def convert_url_to_sheets(sheets_url):
 
