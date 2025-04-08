@@ -27,7 +27,7 @@ def run():
 def read_csv_file(tutor_name):
     # Read CSV without using index_col to preserve the first row
     df = pd.read_csv("downloaded_data.csv")
-    # os.remove("downloaded_data.csv")  # Remove the file after reading it
+    os.remove("downloaded_data.csv")  # Remove the file after reading it
     last_col = [df.columns[-1]] + df.iloc[:, -1].tolist()
     total_hours = last_col[0]
     total_pay = last_col[1]
